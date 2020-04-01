@@ -10,7 +10,8 @@ class Album extends Model
 {
     protected $fillable = [
         'user_id', 'album_name', 'album_description',
-        'cover_picture','privacy'
+        'cover_picture','privacy','album_date','album_venue',
+        // 'created_by','updated_by'
     ];
 
     public function user()

@@ -23,12 +23,15 @@ Route::post('/register', 'Api\PassportController@register');
 
 //Users
 Route::get('/users','Api\UserController@index');    //returns list of users
-Route::post('/users','Api\UserController@store');   //creates new user
+Route::post('/user/register','Api\UserController@store');   //creates new user
 
 
 Route::group(['middleware' => 'auth:api'], function(){  //Authenticated only
 
     //Users
+     //getprofile with auth
+    Route::put('/user/updateprofile','Api\UserController@updateprofile'); // put profile with auth
+
     Route::put('/users/{id}','Api\UserController@update'); //update user with id
     Route::delete('/users/{id}','Api\USerController@destroy'); //delele user with id
 
@@ -46,11 +49,11 @@ Route::group(['middleware' => 'auth:api'], function(){  //Authenticated only
 
 
 //Allows both guest and auth access
-$middleware = ['api'];
-if (\Request::header('Authorization')) 
+//$middleware = ['api'];
+if (\Request::header('Authorization'))
    $middleware = array_merge(['auth:api']);
 Route::group(['middleware' => $middleware], function () {
-    
+    Route::get('/user/getprofile','Api\UserController@getprofile');
     Route::get('/users/{id}', 'Api\UserController@show');   //with auth -> return all albums, guest-> return only public albums
     Route::get('/albums/{id}', 'Api\AlbumController@show'); //with auth -> return all photos, guest-> return only public photos
     Route::get('/photos/{id}', 'Api\PhotoController@show'); //with auth -> access private photo

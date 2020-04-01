@@ -14,7 +14,7 @@ use Auth;
 
 class AlbumController extends Controller
 {
-    
+
     //Create a new Album for authenticated user
     //Returns 201 and album id on success
     public function store(Request $request) //POST
@@ -35,7 +35,7 @@ class AlbumController extends Controller
                 return response()->json($e->errors(),400);
             }
             $file_to_store = 'noimage.jpg'; //default image
-                
+
             if($request->cover_picture !== null)
             {
                 $filename = $request->file('cover_picture')->getClientOriginalName();
@@ -53,6 +53,8 @@ class AlbumController extends Controller
                 'album_description' => $request->album_description,
                 'privacy' => $request->privacy,
                 'cover_picture' => $file_to_store,
+                'album_date' => $request->album_date,
+                'album_venue' => $request->album_venue
             ]);
 
             return response()->json([
@@ -71,7 +73,7 @@ class AlbumController extends Controller
     //Returns status 200 for success
     public function update(Request $request, $id) //PUT
     {
-        try{           
+        try{
 
             $album =Album::where('id',$id)
                         ->where('user_id',auth()->user()->id);
@@ -79,7 +81,7 @@ class AlbumController extends Controller
                 return response()->json([
                     'success' => false,
                     'message' => 'Album not found or Unauthorized'], 400);
-            
+
             $old_photo = Album::where('id',$id)->pluck('cover_picture')->first();
 
             //Validate the data
@@ -97,7 +99,7 @@ class AlbumController extends Controller
             }
 
             $file_to_store = $old_photo;
-                
+
             if($request->cover_picture != null)
             {
                 //Delete Old Image
@@ -131,11 +133,11 @@ class AlbumController extends Controller
     //If user owns the album, returns all photos
     public function show($id)
     {
-        
+
         try{
             //Get the album
-            $album = Album::where('id',$id);        
-            
+            $album = Album::where('id',$id);
+
             if(count($album->get()) === 0) //No album present
             {
                 return response()->json([
@@ -149,10 +151,10 @@ class AlbumController extends Controller
             $privacy = $album->pluck('privacy')->first();
 
             if(auth()->check() and auth()->user()->id === $user)
-            {   
+            {
                 //return album data + all photos
                 $photos = Photo::where('album_id',$id);
-                
+
                 return response()->json([
                     'success' => true,
                     'data' => $album->get(),
@@ -185,7 +187,7 @@ class AlbumController extends Controller
         }
     }
 
-    
+
 
     //Delete Album with id=$id if authenticated user owns it
     //Returns 200 for success
@@ -195,7 +197,7 @@ class AlbumController extends Controller
         {
             //Get exact album to be deleted
             $album =Album::where('id',$id);
-            
+
             if(count($album->get())===0)
                 return response()->json([
                     'success' => false,
@@ -221,7 +223,7 @@ class AlbumController extends Controller
                 {
                     Storage::delete('/public/cover_pictures/'.$cover);
                 }
-                $album = $album->delete();  
+                $album = $album->delete();
                 return response()->json([], 200);
             }
             else
