@@ -19,10 +19,10 @@ Route::get('/details', 'Api\PassportController@details')->middleware('auth:api')
 
 //Login and Register
 Route::post('/login', 'Api\PassportController@login');
-Route::post('/register', 'Api\PassportController@register');
+// Route::post('/register', 'Api\PassportController@register');
 
 //Users
-Route::get('/users','Api\UserController@index');    //returns list of users
+// Route::get('/users','Api\UserController@index');    //returns list of users
 Route::post('/user/register','Api\UserController@store');   //creates new user
 
 
@@ -32,24 +32,28 @@ Route::group(['middleware' => 'auth:api'], function(){  //Authenticated only
      //getprofile with auth
     Route::put('/user/updateprofile','Api\UserController@updateprofile'); // put profile with auth
 
-    Route::put('/users/{id}','Api\UserController@update'); //update user with id
-    Route::delete('/users/{id}','Api\USerController@destroy'); //delele user with id
+
+    Route::get('/admin/user/getalluserinfo','Api\UserController@index'); // get all user info
+    Route::delete('/admin/user/deleteuser/{id}','Api\UserController@destroy'); //delete user with id
+
+    // Route::put('/users/{id}','Api\UserController@update'); //update user with id
+    // Route::delete('/users/{id}','Api\USerController@destroy'); //delele user with id
 
     //Albums
-    Route::post('/albums','Api\AlbumController@store');   //create new album
-    Route::put('/albums/{id}','Api\AlbumController@update'); //update album with id
-    Route::delete('/albums/{id}','Api\AlbumController@destroy'); //delele album with id
+    Route::post('/admin/gallery/createalbum','Api\AlbumController@store');   //create new album
+    Route::put('/admin/gallery/updatealbum/{id}','Api\AlbumController@update'); //update album with id
+    Route::delete('/admin/gallery/deletealbum/{id}','Api\AlbumController@destroy'); //delele album with id
 
 
     //Photos
-    Route::post('/photos','Api\PhotoController@store');   //upload new photo
-    Route::put('/photos/{id}','Api\PhotoController@update'); //update photo with id
-    Route::delete('/photos/{id}','Api\PhotoController@destroy'); //delele photo with id
+    Route::post('/admin/gallery/createphotos','Api\PhotoController@store');   //upload new photo
+    Route::put('/admin/gallery/photos/{id}','Api\PhotoController@update'); //update photo with id
+    Route::delete('/admin/gallery/deletephotos/{id}','Api\PhotoController@destroy'); //delele photo with id
 });
 
 
 //Allows both guest and auth access
-//$middleware = ['api'];
+$middleware = ['api'];
 if (\Request::header('Authorization'))
    $middleware = array_merge(['auth:api']);
 Route::group(['middleware' => $middleware], function () {

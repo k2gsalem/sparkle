@@ -48,4 +48,7 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Album','user_id');
     }
+    public function tokens(){
+        return $this->hasMany('Laravel\Passport\Token','user_id');
+    }
 }
