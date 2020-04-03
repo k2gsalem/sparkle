@@ -6,8 +6,11 @@
 /public/storage
 /storage/*.key
 /vendor
+/vendor/
+/vendor/*
 .env
 .env.backup
+.htaccess
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
