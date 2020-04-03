@@ -1,5 +1,6 @@
 
 /storage
+/storage/framework/
 /node_modules
 /public/hot
 /public/storage

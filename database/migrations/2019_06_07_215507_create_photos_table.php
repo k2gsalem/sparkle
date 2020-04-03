@@ -21,6 +21,10 @@ class CreatePhotosTable extends Migration
             $table->string('photo');
             $table->mediumText('photo_description')->nullable();
             $table->integer('privacy')->default(1)->unsigned();
+            $table->unsignedBigInteger('created_by');
+            $table->foreign('created_by')->references('id')->on('users');
+            $table->unsignedBigInteger('updated_by');
+            $table->foreign('updated_by')->references('id')->on('users');
 
             $table->timestamps();
         });

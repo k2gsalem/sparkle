@@ -47,7 +47,7 @@ Route::group(['middleware' => 'auth:api'], function(){  //Authenticated only
 
     //Photos
     Route::post('/admin/gallery/createphotos','Api\PhotoController@store');   //upload new photo
-    Route::put('/admin/gallery/photos/{id}','Api\PhotoController@update'); //update photo with id
+    Route::put('/admin/gallery/updatephotos/{id}','Api\PhotoController@update'); //update photo with id
     Route::delete('/admin/gallery/deletephotos/{id}','Api\PhotoController@destroy'); //delele photo with id
 });
 
@@ -57,6 +57,7 @@ $middleware = ['api'];
 if (\Request::header('Authorization'))
    $middleware = array_merge(['auth:api']);
 Route::group(['middleware' => $middleware], function () {
+    Route::get('/getallalbums','Api\AlbumController@getallalbums');
     Route::get('/user/getprofile','Api\UserController@getprofile');
     Route::get('/users/{id}', 'Api\UserController@show');   //with auth -> return all albums, guest-> return only public albums
     Route::get('/albums/{id}', 'Api\AlbumController@show'); //with auth -> return all photos, guest-> return only public photos

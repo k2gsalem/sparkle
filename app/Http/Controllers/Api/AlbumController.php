@@ -194,7 +194,58 @@ class AlbumController extends Controller
         }
     }
 
+    public function getallalbums()
+    {
 
+        try {
+            //Get the album
+            $album = Album::all();
+
+            if (count($album) === 0) //No album present
+            {
+                return response()->json([
+                    'status' => "Success",
+                    'message' => 'Album not found'
+                ], 404);
+            }
+            //Get user
+            $user = $album->pluck('user_id')->first();
+            //Get privacy
+            $privacy = $album->pluck('privacy')->first();
+
+            // if (auth()->check() and auth()->user()->id === $user) {
+            //     //return album data + all photos
+            //     $photos = Photo::where('album_id', $id);
+
+            //     return response()->json([
+            //         'success' => true,
+            //         'data' => $album->get(),
+            //         'photos' => $photos->get()
+            //     ], 200);
+            // } else
+            if ($privacy === 1 or $privacy === 2) //album is public or link
+            {
+                //return album data + only public photos
+                // $photos = Photo::where('album_id', $id)
+                //     ->where('privacy', '=', '1');
+                return response()->json([
+                    'status' => "Success",
+                    'message' => $album,
+                    // 'photos' => $photos->get()
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => "failure",
+                    'message' => 'Unauthorized'
+                ], 401);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => "failure",
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
 
     //Delete Album with id=$id if authenticated user owns it
     //Returns 200 for success
